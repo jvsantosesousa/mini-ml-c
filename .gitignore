@@ -2,3 +2,5 @@
 build/
 test_matrix
 program
+main_test
+main_test.c

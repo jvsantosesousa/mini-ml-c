@@ -21,7 +21,7 @@ void matrix_set(Matrix *matrix, size_t row, size_t col, double value);
 //Adds two matrices. Returns NULL if dimensions are incompatible
 Matrix *matrix_add(const Matrix *a, const Matrix *b);
 
-//Multiplies two matricies. Returns NULL if dimensions are incompatible
+//Multiplies two matrices. Returns NULL if dimensions are incompatible
 Matrix *matrix_multiply(const Matrix *a, const Matrix *b);
 
 //Returns the transpose of a matrix
@@ -30,7 +30,7 @@ Matrix *matrix_transpose(const Matrix *matrix);
 //Prints the matrix
 void matrix_print(const Matrix *matrix);
 
-//Realeses matrix and its allocated memory
+//Frees matrix and its allocated memory
 void matrix_free(Matrix *matrix);
 
 
