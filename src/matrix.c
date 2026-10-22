@@ -1,6 +1,7 @@
 #include "matrix.h"
 #include <stdlib.h>
 #include <stdint.h>
+#include <stdio.h>
 
 Matrix *matrix_create(size_t rows, size_t cols){
     if(rows == 0 || cols == 0){
@@ -36,6 +37,20 @@ double matrix_get(const Matrix *matrix, size_t row, size_t col){
 
 void matrix_set(Matrix *matrix, size_t row, size_t col, double value){
     matrix->elements[row * matrix->cols + col] = value;
+}
+
+void matrix_print(const Matrix *matrix){
+    if(matrix == NULL){
+        printf("(null matrix)\n");
+        return;
+    }
+
+    for(size_t i = 0; i < matrix->rows; i++){
+        for(size_t j = 0; j < matrix->cols; j++){
+            printf("%8.3f", matrix_get(matrix, i, j));
+        }
+        printf("\n");
+    }
 }
 
 void matrix_free(Matrix *matrix){
