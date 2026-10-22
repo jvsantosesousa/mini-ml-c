@@ -29,3 +29,21 @@ Matrix *matrix_create(size_t rows, size_t cols){
 
     return matrix;
 }
+
+double matrix_get(const Matrix *matrix, size_t row, size_t col){
+    return matrix->elements[row * matrix->cols + col];
+}
+
+void matrix_set(Matrix *matrix, size_t row, size_t col, double value){
+    matrix->elements[row * matrix->cols + col] = value;
+}
+
+void matrix_free(Matrix *matrix){
+    if(matrix == NULL){
+        return;
+    }
+
+    free(matrix->elements);
+    free(matrix);
+}
+

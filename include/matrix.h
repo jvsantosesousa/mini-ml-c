@@ -12,10 +12,10 @@ typedef struct{
 //Creates a matrix. Returns NULL on failure
 Matrix *matrix_create(size_t rows, size_t cols);
 
-//Returns the value stored at specified position
+//Returns the value at (row, col)
 double matrix_get(const Matrix *matrix, size_t row, size_t col);
 
-//Sets the value at specified position
+//Sets the value at (row, col)
 void matrix_set(Matrix *matrix, size_t row, size_t col, double value);
 
 //Adds two matrices. Returns NULL if dimensions are incompatible
@@ -32,9 +32,5 @@ void matrix_print(const Matrix *matrix);
 
 //Frees matrix and its allocated memory
 void matrix_free(Matrix *matrix);
-
-
-
-
 
 #endif
