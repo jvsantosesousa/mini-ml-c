@@ -53,6 +53,55 @@ void matrix_print(const Matrix *matrix){
     }
 }
 
+Matrix *matrix_add(const Matrix *a, const Matrix *b){
+    if(a->rows != b->rows || a->cols != b->cols){
+        return NULL;
+    }
+
+    Matrix *result = matrix_create(a->rows, a->cols);
+
+    if(result == NULL){
+        return NULL;
+    }
+
+    for(size_t i = 0; i < a->rows * a->cols; i++){
+        result->elements[i] = a->elements[i] + b->elements[i];
+    }
+
+    return result;
+}
+
+Matrix *matrix_multiply(const Matrix *a, const Matrix *b){
+    if(a == NULL || b == NULL){
+        return NULL;
+    }
+
+    if(a->cols != b->rows){
+        return NULL;
+    }
+
+    Matrix *result = matrix_create(a->rows, b->cols);
+
+    if(result == NULL){
+        return NULL;
+    }
+
+    for(size_t i = 0; i < a->rows; i++){
+        for(size_t j = 0; j < b->cols; j++){
+
+            double sum = 0.0;
+
+            for(size_t k = 0; k < a->cols; k++){
+                sum = sum + matrix_get(a, i, k) * matrix_get(b, k, j);
+            }
+
+            matrix_set(result, i, j, sum);
+        }
+    }
+
+    return result;
+}
+
 void matrix_free(Matrix *matrix){
     if(matrix == NULL){
         return;
