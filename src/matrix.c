@@ -54,6 +54,10 @@ void matrix_print(const Matrix *matrix){
 }
 
 Matrix *matrix_add(const Matrix *a, const Matrix *b){
+    if(a == NULL || b == NULL){
+        return NULL;
+    }
+
     if(a->rows != b->rows || a->cols != b->cols){
         return NULL;
     }
@@ -100,6 +104,28 @@ Matrix *matrix_multiply(const Matrix *a, const Matrix *b){
     }
 
     return result;
+}
+
+Matrix *matrix_transpose(const Matrix *matrix){
+    if(matrix == NULL){
+        return NULL;
+    }
+
+    Matrix *transpose = matrix_create(matrix->cols, matrix->rows);
+
+    if(transpose == NULL){
+        return NULL;
+    }
+
+    for(size_t i = 0; i < transpose->cols; i++){
+        for(size_t j = 0; j < transpose->rows; j++){
+            double new_value = matrix_get(matrix, i, j);
+
+            matrix_set(transpose, j, i, new_value);
+        }
+    }
+
+    return transpose;
 }
 
 void matrix_free(Matrix *matrix){
