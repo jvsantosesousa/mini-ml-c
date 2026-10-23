@@ -27,6 +27,9 @@ Matrix *matrix_subtract(const Matrix *a, const Matrix *b);
 //Multiplies two matrices. Returns NULL if dimensions are incompatible
 Matrix *matrix_multiply(const Matrix *a, const Matrix *b);
 
+//Multiplies element by element of two matrices and returns new matrix. Returns NULL if dimensions are incompatible
+Matrix *matrix_hadamard(const Matrix *a, const Matrix *b);
+
 //Returns the transpose of a matrix
 Matrix *matrix_transpose(const Matrix *matrix);
 

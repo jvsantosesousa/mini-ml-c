@@ -2,7 +2,7 @@ CC     = gcc
 CFLAGS = -Wall -Wextra -std=c11 -g -fsanitize=address -Iinclude
 
 # One test file per feature: tests/test_<name>.c
-TESTS = create get_set print add multiply transpose subtract
+TESTS = create get_set print add multiply transpose subtract hadamard
 
 # Keep the compiled test programs in build/
 .SECONDARY:

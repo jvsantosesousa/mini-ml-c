@@ -133,24 +133,44 @@ Matrix *matrix_transpose(const Matrix *matrix){
         return NULL;
     }
 
-    Matrix *transpose = matrix_create(matrix->cols, matrix->rows);
+    Matrix *result = matrix_create(matrix->cols, matrix->rows);
 
-    if(transpose == NULL){
+    if(result == NULL){
         return NULL;
     }
 
-    for(size_t i = 0; i < transpose->cols; i++){
-        for(size_t j = 0; j < transpose->rows; j++){
+    for(size_t i = 0; i < result->cols; i++){
+        for(size_t j = 0; j < result->rows; j++){
             double new_value = matrix_get(matrix, i, j);
 
-            matrix_set(transpose, j, i, new_value);
+            matrix_set(result, j, i, new_value);
         }
     }
 
-    return transpose;
+    return result;
 }
 
+Matrix *matrix_hadamard(const Matrix *a, const Matrix *b){
+    if(a == NULL || b == NULL){
+        return NULL;
+    }
 
+    if(a->rows != b->rows || a->cols != b->cols){
+        return NULL;
+    }
+
+    Matrix *result = matrix_create(a->rows, a->cols);
+
+    if(result == NULL){
+        return NULL;
+    }
+
+    for(size_t i = 0; i < a->rows * a->cols; i++){
+        result->elements[i] = a->elements[i] * b->elements[i];
+    }
+
+    return result;
+}
 
 void matrix_free(Matrix *matrix){
     if(matrix == NULL){
