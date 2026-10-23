@@ -21,6 +21,9 @@ void matrix_set(Matrix *matrix, size_t row, size_t col, double value);
 //Adds two matrices. Returns NULL if dimensions are incompatible
 Matrix *matrix_add(const Matrix *a, const Matrix *b);
 
+//Subtracts b from a. Returns a new matrix, or NULL if dimensions are incompatible
+Matrix *matrix_subtract(const Matrix *a, const Matrix *b);
+
 //Multiplies two matrices. Returns NULL if dimensions are incompatible
 Matrix *matrix_multiply(const Matrix *a, const Matrix *b);
 
