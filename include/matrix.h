@@ -45,4 +45,7 @@ void matrix_print(const Matrix *matrix);
 //Frees matrix and its allocated memory
 void matrix_free(Matrix *matrix);
 
+//Applies a function to each element and returns a new matrix. Returns NULL on failure
+Matrix *matrix_apply(const Matrix *matrix, double (*function)(double));
+
 #endif

@@ -208,6 +208,28 @@ Matrix *matrix_transpose(const Matrix *matrix){
     return result;
 }
 
+Matrix *matrix_apply(const Matrix *matrix, double (*function)(double)){
+    if(matrix == NULL){
+        return NULL;
+    }
+
+    if(function == NULL){
+        return NULL;
+    }
+
+    Matrix *result = matrix_create(matrix->rows, matrix->cols);
+
+    if(result == NULL){
+        return NULL;
+    }
+
+    for(size_t i = 0; i < matrix->rows * matrix->cols; i++){
+        result->elements[i] = (*function)(matrix->elements[i]);
+    }
+
+    return result;
+}
+
 void matrix_free(Matrix *matrix){
     if(matrix == NULL){
         return;
