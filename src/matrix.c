@@ -53,6 +53,24 @@ void matrix_print(const Matrix *matrix){
     }
 }
 
+Matrix *matrix_copy(const Matrix *matrix){
+    if(matrix == NULL){
+        return NULL;
+    }
+
+    Matrix *result = matrix_create(matrix->rows, matrix->cols);
+
+    if(result == NULL){
+        return NULL;
+    }
+
+    for(size_t i = 0; i < matrix->rows * matrix->cols; i++){
+        result->elements[i] = matrix->elements[i];
+    }
+
+    return result;
+}
+
 Matrix *matrix_add(const Matrix *a, const Matrix *b){
     if(a == NULL || b == NULL){
         return NULL;
@@ -128,28 +146,6 @@ Matrix *matrix_multiply(const Matrix *a, const Matrix *b){
     return result;
 }
 
-Matrix *matrix_transpose(const Matrix *matrix){
-    if(matrix == NULL){
-        return NULL;
-    }
-
-    Matrix *result = matrix_create(matrix->cols, matrix->rows);
-
-    if(result == NULL){
-        return NULL;
-    }
-
-    for(size_t i = 0; i < result->cols; i++){
-        for(size_t j = 0; j < result->rows; j++){
-            double new_value = matrix_get(matrix, i, j);
-
-            matrix_set(result, j, i, new_value);
-        }
-    }
-
-    return result;
-}
-
 Matrix *matrix_hadamard(const Matrix *a, const Matrix *b){
     if(a == NULL || b == NULL){
         return NULL;
@@ -167,6 +163,46 @@ Matrix *matrix_hadamard(const Matrix *a, const Matrix *b){
 
     for(size_t i = 0; i < a->rows * a->cols; i++){
         result->elements[i] = a->elements[i] * b->elements[i];
+    }
+
+    return result;
+}
+
+Matrix *matrix_scale(const Matrix *matrix, double scalar){
+    if(matrix == NULL){
+        return NULL;
+    }
+
+    Matrix *result = matrix_create(matrix->rows, matrix->cols);
+
+    if(result == NULL){
+        return NULL;
+    }
+
+    for(size_t i = 0; i < matrix->rows * matrix->cols; i++){
+        result->elements[i] = matrix->elements[i] * scalar;
+    }
+
+    return result;
+}
+
+Matrix *matrix_transpose(const Matrix *matrix){
+    if(matrix == NULL){
+        return NULL;
+    }
+
+    Matrix *result = matrix_create(matrix->cols, matrix->rows);
+
+    if(result == NULL){
+        return NULL;
+    }
+
+    for(size_t i = 0; i < result->cols; i++){
+        for(size_t j = 0; j < result->rows; j++){
+            double new_value = matrix_get(matrix, i, j);
+
+            matrix_set(result, j, i, new_value);
+        }
     }
 
     return result;
