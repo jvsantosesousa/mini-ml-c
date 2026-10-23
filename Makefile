@@ -1,16 +1,20 @@
 CC     = gcc
 CFLAGS = -Wall -Wextra -std=c11 -g -fsanitize=address -Iinclude
 
+SRC     = $(wildcard src/*.c)
+HEADERS = $(wildcard include/*.h)
+LDLIBS  = -lm
+
 # One test file per feature: tests/test_<name>.c
-TESTS = create get_set print add multiply transpose subtract hadamard scale copy
+TESTS = create get_set print add multiply transpose subtract hadamard scale copy apply sigmoid
 
 # Keep the compiled test programs in build/
 .SECONDARY:
 
 # Compile one test program (library + that test file)
-build/test_%: tests/test_%.c src/matrix.c include/matrix.h
+build/test_%: tests/test_%.c $(SRC) $(HEADERS)
 	@mkdir -p build
-	$(CC) $(CFLAGS) src/matrix.c $< -o $@
+	$(CC) $(CFLAGS) $(SRC) $< -o $@ $(LDLIBS)
 
 # Run one test:  make run-add
 run-%: build/test_%
