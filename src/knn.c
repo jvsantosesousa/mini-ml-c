@@ -73,11 +73,14 @@ int knn_find_neighbors(const Matrix *train, const Matrix *query, size_t query_ro
 
             while(position > 0 && distance < best_distances[position - 1]){
                 best_distances[position] = best_distances[position - 1];
+
                 indices[position] = indices[position - 1];
+
                 position--;
             }
 
             best_distances[position] = distance;
+
             indices[position] = i;
 
             if(count < neighbor_count){
@@ -89,4 +92,42 @@ int knn_find_neighbors(const Matrix *train, const Matrix *query, size_t query_ro
     free(best_distances);
     
     return 0;
+}
+
+double knn_vote(const Matrix *labels, const size_t *indices, size_t neighbor_count){
+    if(labels == NULL || indices == NULL){
+        return NAN;
+    }
+
+    if(labels->cols != 1 || neighbor_count == 0){
+        return NAN;
+    }
+
+    for(size_t i = 0; i < neighbor_count; i++){
+        if(indices[i] >= labels->rows){
+            return NAN;
+        }
+    }
+
+    double best_label = 0.0;
+    size_t best_votes = 0;
+
+    for(size_t i = 0; i < neighbor_count; i++){
+        double label = labels->elements[indices[i]];
+
+        size_t votes = 0;
+
+        for(size_t j = i; j < neighbor_count; j++){
+            if(labels->elements[indices[j]] == label){
+                votes++;
+            }
+        }
+
+        if(votes > best_votes){
+            best_label = label;
+            best_votes = votes;
+        }
+    }
+
+    return best_label;
 }
