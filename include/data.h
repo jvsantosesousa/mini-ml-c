@@ -11,4 +11,9 @@ Matrix *data_normalize(const Matrix *matrix);
 //Returns the shuffled matrix, or NULL if input is NULL or memory allocation fails
 Matrix *data_shuffle(const Matrix *matrix, unsigned int seed);
 
+////Split the rows of a matrix in two new matrices, train and test, without shuffling: the first rows go to train
+//ratio is the fraction of rows for train (0.8 = 80%) and must be between 0 and 1, and both parts need at least one row
+//Returns 0 on success, or -1 on failure (and then train and test are set to NULL)
+int data_split(const Matrix *matrix, double train_ratio, Matrix **train, Matrix **test);
+
 #endif

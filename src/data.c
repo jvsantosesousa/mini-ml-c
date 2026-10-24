@@ -1,5 +1,7 @@
 #include "data.h"
 #include <stdlib.h>
+//
+#define SPLIT_EPSILON 1e-9
 
 Matrix *data_normalize(const Matrix *matrix){
     if(matrix == NULL){
@@ -77,4 +79,70 @@ Matrix *data_shuffle(const Matrix *matrix, unsigned int seed){
     }
 
     return result;
+}
+
+//Copy count rows of matrix, starting at row first_row, into a new matrix
+//The caller must make sure the rows first_row to first_row + count - 1 exist in matrix
+//Returns the new matrix, or NULL if count is 0 or memory allocation fails
+static Matrix *copy_rows(const Matrix *matrix, size_t first_row, size_t count){
+
+    size_t rows = count;
+    size_t cols = matrix->cols;
+
+    Matrix *result = matrix_create(rows, cols);
+
+    if(result == NULL){
+        return NULL;
+    }
+
+    for(size_t i = 0; i < result->rows * result->cols; i++){
+        result->elements[i] = matrix->elements[first_row * cols + i];
+    }
+
+    return result;
+}
+
+int data_split(const Matrix *matrix, double train_ratio, Matrix **train, Matrix **test){
+    if(train != NULL){
+        *train = NULL;
+    }
+
+    if(test != NULL){
+        *test = NULL;
+    }
+
+    if(train == NULL || test == NULL){
+        return -1;
+    }
+
+    if(matrix == NULL){
+        return -1;
+    }
+
+    if(!(train_ratio > 0 && train_ratio < 1)){
+        return -1;
+    }
+
+    size_t train_rows;
+
+    train_rows = (size_t)(matrix->rows * train_ratio + SPLIT_EPSILON);
+
+    if(train_rows == 0 || matrix->rows - train_rows == 0){
+        return -1;
+    }
+
+    Matrix *new_train = copy_rows(matrix, 0, train_rows);
+    Matrix *new_test = copy_rows(matrix, train_rows, matrix->rows - train_rows);
+
+    if(new_train == NULL || new_test == NULL){
+        matrix_free(new_train);
+        matrix_free(new_test);
+        return -1;
+    }
+
+    *train = new_train;
+    *test = new_test;
+
+    return 0;
+
 }

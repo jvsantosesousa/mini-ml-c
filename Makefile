@@ -6,7 +6,7 @@ HEADERS = $(wildcard include/*.h)
 LDLIBS  = -lm
 
 # One test file per feature: tests/test_<name>.c
-TESTS = create get_set print add multiply transpose subtract hadamard scale copy apply sigmoid relu accuracy normalize
+TESTS = create get_set print add multiply transpose subtract hadamard scale copy apply sigmoid relu accuracy normalize shuffle split
 
 # Keep the compiled test programs in build/
 .SECONDARY:
