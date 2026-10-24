@@ -6,4 +6,5 @@ program
 tests/
 scratch.c
 scratch
-csv_test_tmp.csv.DS_Store
+csv_test_tmp.csv
+.DS_Store
