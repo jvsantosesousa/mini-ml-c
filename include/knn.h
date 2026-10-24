@@ -16,6 +16,6 @@ int knn_find_neighbors(const Matrix *train, const Matrix *query, size_t query_ro
 //Choose the label that appears most among the neighbors: the labels are read from labels at the rows listed in indices
 //indices is sorted from the closest neighbor to the farthest (as knn_find_neighbors returns it): on a tie, the label of the closest neighbor wins
 //Returns the winning label, or NAN if labels or indices is NULL, labels does not have a single column, neighbor_count is 0 or an index is not a row of labels
-double knn_most_frequent_label(const Matrix *labels, const size_t *indices, size_t neighbor_count);
+double knn_frequent_label(const Matrix *labels, const size_t *indices, size_t neighbor_count);
 
 #endif

@@ -7,7 +7,7 @@ LDLIBS  = -lm
 
 # One test file per feature: tests/test_<name>.c
 TESTS = create get_set print add multiply transpose subtract hadamard scale copy apply sigmoid relu accuracy normalize shuffle split csv separate \
-        neighbors euclidean most_frequent
+        neighbors euclidean frequent_label
 
 # Keep the compiled test programs in build/
 .SECONDARY:
