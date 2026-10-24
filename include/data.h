@@ -7,4 +7,8 @@
 //Returns new matrix, or NULL if input is NULL or memory allocation fails
 Matrix *data_normalize(const Matrix *matrix);
 
+//Shuffle rows, same seed gives the same order
+//Returns the shuffled matrix, or NULL if input is NULL or memory allocation fails
+Matrix *data_shuffle(const Matrix *matrix, unsigned int seed);
+
 #endif
