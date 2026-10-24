@@ -21,4 +21,9 @@ int data_split(const Matrix *matrix, double train_ratio, Matrix **train, Matrix 
 //Returns NULL if path is NULL, the file cannot be opened, a line has a different number of columns, a field is empty or not a number, or memory allocation fails
 Matrix *data_load_csv(const char *path, int has_header);
 
+//Separate a matrix in two new matrices: features gets all the columns except label_column, and labels gets only label_column (as a single column)
+//label_column is the index of the label column, starting at 0. Both results have the same number of rows as matrix
+//Returns 0 on success, or -1 if matrix or an output address is NULL, label_column does not exist, matrix has a single column or memory allocation fails (then features and labels are set to NULL)
+int data_separate_labels(const Matrix *matrix, size_t label_column, Matrix **features, Matrix **labels);
+
 #endif

@@ -257,4 +257,63 @@ Matrix *data_load_csv(const char *path, int has_header){
     return result;
 }
 
+int data_separate_labels(const Matrix *matrix, size_t label_column, Matrix **features, Matrix **labels){
+    if(features != NULL){
+        *features = NULL;
+    }
+
+    if(labels != NULL){
+        *labels = NULL;
+    }
+
+    if(features == NULL || labels == NULL){
+        return -1;
+    }
+
+    if(matrix == NULL){
+        return -1;
+    }
+
+    if(label_column > matrix->cols - 1){
+        return -1;
+    }
+
+    if(matrix->cols == 1){
+        return -1;
+    }
+
+    Matrix *new_features = matrix_create(matrix->rows, matrix->cols - 1);
+
+    Matrix *new_labels = matrix_create(matrix->rows, 1);
+
+    if(new_features == NULL || new_labels == NULL){
+        matrix_free(new_features);
+        matrix_free(new_labels);
+        return -1;
+    }
+
+    for(size_t i = 0; i < matrix->rows; i++){
+
+        size_t k = 0;
+
+        for(size_t j = 0; j < matrix->cols; j++){
+            double value = matrix->elements[i * matrix->cols + j];
+
+            if(j == label_column){
+                new_labels->elements[i] = value;
+            }
+            else{
+                new_features->elements[i * new_features->cols + k] = value;
+                k++;
+            }
+        }
+    }
+
+    *features = new_features;
+
+    *labels = new_labels;
+
+    return 0;
+}
+
 
