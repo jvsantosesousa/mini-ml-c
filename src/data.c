@@ -1,7 +1,11 @@
 #include "data.h"
 #include <stdlib.h>
-//
+#include <stdio.h>
+#include <string.h>
+
 #define SPLIT_EPSILON 1e-9
+//Max size of the line
+#define CSV_LINE_SIZE 4096
 
 Matrix *data_normalize(const Matrix *matrix){
     if(matrix == NULL){
@@ -146,3 +150,111 @@ int data_split(const Matrix *matrix, double train_ratio, Matrix **train, Matrix 
     return 0;
 
 }
+
+static size_t parse_line(const char *line, double *out){
+    size_t count = 0;
+    const char *position = line;
+    char *end;
+
+    while(1){
+        double value = strtod(position, &end);
+
+        if(end == position){
+            return 0;
+        }
+
+        if(out != NULL){
+            out[count] = value;
+        }
+
+        count++;
+
+        if(*end == ','){
+            position = end + 1;
+        }
+        else if(*end == '\n' || *end == '\r' || *end == '\0'){
+            return count;
+        }
+        else{
+            return 0;
+        }
+    }
+}
+
+Matrix *data_load_csv(const char *path, int has_header){
+    if(path == NULL){
+        return NULL;
+    }
+
+    FILE *file = fopen(path, "r");
+
+    if(file == NULL){
+        return NULL;
+    }
+
+    char line[CSV_LINE_SIZE];
+    size_t rows = 0;
+    size_t cols = 0;
+    int skip_line = has_header;
+
+    while(fgets(line, CSV_LINE_SIZE, file) != NULL){
+        if(strchr(line, '\n') == NULL && !feof(file)){
+            fclose(file);
+            return NULL;
+        }
+
+        if(skip_line){
+            skip_line = 0;
+            continue;
+        }
+
+        size_t fields = parse_line(line, NULL);
+
+        if(fields == 0){
+            fclose(file);
+            return NULL;
+        }
+
+        if(rows == 0){
+            cols = fields;
+        }
+        else if(fields != cols){
+            fclose(file);
+            return NULL;
+        }
+
+        rows++;
+    }
+
+    if(rows == 0){
+        fclose(file);
+        return NULL;
+    }
+
+    Matrix *result = matrix_create(rows, cols);
+
+    if(result == NULL){
+        fclose(file);
+        return NULL;
+    }
+
+    rewind(file);
+
+    skip_line = has_header;
+    size_t row = 0;
+
+    while(fgets(line, CSV_LINE_SIZE, file) != NULL){
+        if(skip_line){
+            skip_line = 0;
+            continue;
+        }
+
+        parse_line(line, result->elements + row * cols);
+        row++;
+    }
+
+    fclose(file);
+    return result;
+}
+
+
