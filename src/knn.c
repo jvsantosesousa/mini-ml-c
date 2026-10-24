@@ -94,7 +94,7 @@ int knn_find_neighbors(const Matrix *train, const Matrix *query, size_t query_ro
     return 0;
 }
 
-double knn_vote(const Matrix *labels, const size_t *indices, size_t neighbor_count){
+double knn_most_frequent_label(const Matrix *labels, const size_t *indices, size_t neighbor_count){
     if(labels == NULL || indices == NULL){
         return NAN;
     }
