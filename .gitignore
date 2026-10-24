@@ -6,3 +6,4 @@ program
 tests/
 scratch.c
 scratch
+csv_test_tmp.csv
