@@ -131,3 +131,58 @@ double knn_frequent_label(const Matrix *labels, const size_t *indices, size_t ne
 
     return best_label;
 }
+
+Matrix *knn_predict(const Matrix *train, const Matrix *train_labels, const Matrix *test, size_t neighbor_count){
+    if(train == NULL || train_labels == NULL || test == NULL){
+        return NULL;
+    }
+
+    if(train_labels->cols != 1 || train_labels->rows != train->rows){
+        return NULL;
+    }
+
+    if(train->cols != test->cols){
+        return NULL;
+    }
+
+    if(neighbor_count == 0 || neighbor_count > train->rows){
+        return NULL;
+    }
+
+    size_t *indices = malloc(neighbor_count * sizeof(size_t));
+
+    if(indices == NULL){
+        return NULL;
+    }
+
+    Matrix *predicted = matrix_create(test->rows, 1);
+
+    if(predicted == NULL){
+        free(indices);
+
+        return NULL;
+    }
+
+    for(size_t i = 0; i < test->rows; i++){
+        if(knn_find_neighbors(train, test, i, neighbor_count, indices) == -1){
+            free(indices);
+            matrix_free(predicted);
+
+            return NULL;
+        }
+
+        double label = knn_frequent_label(train_labels, indices, neighbor_count);
+
+        if(isnan(label)){
+            free(indices);
+            matrix_free(predicted);
+
+            return NULL;
+        }
+
+        predicted->elements[i] = label;
+    }
+
+    free(indices);
+    return predicted;
+}

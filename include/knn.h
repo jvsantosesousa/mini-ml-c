@@ -18,4 +18,9 @@ int knn_find_neighbors(const Matrix *train, const Matrix *query, size_t query_ro
 //Returns the winning label, or NAN if labels or indices is NULL, labels does not have a single column, neighbor_count is 0 or an index is not a row of labels
 double knn_frequent_label(const Matrix *labels, const size_t *indices, size_t neighbor_count);
 
+//Predict a label for every row of test using the neighbor_count nearest rows of train (labels come from train_labels)
+//train_labels must have a single column and one row for each row of train; train and test must have the same number of columns
+//Returns a new matrix with one row for each row of test and a single column, or NULL if a matrix is NULL, train_labels is not a single column or its rows differ from train, the numbers of columns of train and test differ, neighbor_count is 0 or larger than the rows of train, or memory allocation fails
+Matrix *knn_predict(const Matrix *train, const Matrix *train_labels, const Matrix *test, size_t neighbor_count);
+
 #endif
