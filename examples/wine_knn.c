@@ -39,7 +39,7 @@ static double evaluate(const char *title, const Matrix *features, const Matrix *
         goto cleanup;
     }
 
-    predicted = knn_predict(train_features, train_labels, test_features, NEIGHBOR_COUNT);
+    predicted = knn_predict(train_features, train_labels, test_features, NEIGHBOR_COUNT, KNN_EUCLIDEAN);
 
     if(predicted == NULL){
         printf("could not predict\n");

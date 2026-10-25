@@ -62,7 +62,7 @@ double manhattan_distance(const Matrix *matrix1, size_t row1, const Matrix *matr
     return sum;
 }
 
-int knn_find_neighbors(const Matrix *train, const Matrix *query, size_t query_row, size_t neighbor_count, size_t *indices){
+int knn_find_neighbors(const Matrix *train, const Matrix *query, size_t query_row, size_t neighbor_count, KnnMetric metric, size_t *indices){
     if(train == NULL || query == NULL || indices == NULL){
         return -1;
     }
@@ -79,6 +79,10 @@ int knn_find_neighbors(const Matrix *train, const Matrix *query, size_t query_ro
         return -1;
     }
 
+    if(metric != KNN_EUCLIDEAN && metric != KNN_MANHATTAN){
+        return -1;
+    }
+
     double *best_distances = malloc(neighbor_count * sizeof(double));
 
     if(best_distances == NULL){
@@ -90,7 +94,7 @@ int knn_find_neighbors(const Matrix *train, const Matrix *query, size_t query_ro
     for(size_t i = 0; i < train->rows; i++){
         double distance = 0.0;
 
-        distance = euclidean_distance(train, i, query, query_row);
+        distance = (metric == KNN_MANHATTAN ? manhattan_distance(train, i, query, query_row) : euclidean_distance(train, i, query, query_row));
 
         if(count < neighbor_count || distance < best_distances[neighbor_count - 1]){
             size_t position;
@@ -163,7 +167,7 @@ double knn_frequent_label(const Matrix *labels, const size_t *indices, size_t ne
     return best_label;
 }
 
-Matrix *knn_predict(const Matrix *train, const Matrix *train_labels, const Matrix *test, size_t neighbor_count){
+Matrix *knn_predict(const Matrix *train, const Matrix *train_labels, const Matrix *test, size_t neighbor_count, KnnMetric metric){
     if(train == NULL || train_labels == NULL || test == NULL){
         return NULL;
     }
@@ -177,6 +181,10 @@ Matrix *knn_predict(const Matrix *train, const Matrix *train_labels, const Matri
     }
 
     if(neighbor_count == 0 || neighbor_count > train->rows){
+        return NULL;
+    }
+
+    if(metric != KNN_EUCLIDEAN && metric != KNN_MANHATTAN){
         return NULL;
     }
 
@@ -195,7 +203,7 @@ Matrix *knn_predict(const Matrix *train, const Matrix *train_labels, const Matri
     }
 
     for(size_t i = 0; i < test->rows; i++){
-        if(knn_find_neighbors(train, test, i, neighbor_count, indices) == -1){
+        if(knn_find_neighbors(train, test, i, neighbor_count, metric, indices) == -1){
             free(indices);
             matrix_free(predicted);
 
