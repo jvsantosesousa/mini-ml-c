@@ -31,6 +31,37 @@ double euclidean_distance(const Matrix *matrix1, size_t row1, const Matrix *matr
     return sqrt(sum);
 }
 
+double manhattan_distance(const Matrix *matrix1, size_t row1, const Matrix *matrix2, size_t row2){
+    if(matrix1 == NULL || matrix2 == NULL){
+        return NAN;
+    }
+
+    if(matrix1->cols != matrix2->cols){
+        return NAN;
+    }
+
+    if(row1 > matrix1->rows - 1){
+        return NAN;
+    }
+
+    if(row2 > matrix2->rows - 1){
+        return NAN;
+    }
+    
+    double sum = 0.0;
+
+    for(size_t c = 0; c < matrix1->cols; c++){
+        double a = matrix1->elements[row1 * matrix1->cols + c];
+        double b = matrix2->elements[row2 * matrix2->cols + c];
+
+        double diff = fabs(a - b);
+
+        sum = sum + diff;
+    }
+
+    return sum;
+}
+
 int knn_find_neighbors(const Matrix *train, const Matrix *query, size_t query_row, size_t neighbor_count, size_t *indices){
     if(train == NULL || query == NULL || indices == NULL){
         return -1;
